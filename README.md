@@ -2,6 +2,7 @@
 
 Pre-requisite
  - install a local CRC (CodeReady Container)
+ - Kubernetes example https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 ## Working with CRC
 
 ```
