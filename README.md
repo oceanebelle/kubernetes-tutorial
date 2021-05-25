@@ -1,9 +1,12 @@
-# openshift-tutorial
 
-Pre-requisite
+
+Pre-requisite option using CRC
  - install a local CRC (CodeReady Container)
  - Kubernetes example https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
-## Working with CRC
+
+ Pre-requiriste option using minikube to follow Kubernetes tutorials
+
+# Working with CodeReady Containers 
 
 ```
 # login to crc
@@ -13,7 +16,7 @@ oc login -u developer -p developer https://api.crc.testing:6443
 crc console
 ```
 
-## Create project using CLI
+### Create project using CLI
 
 ```
 # creates the project
@@ -28,7 +31,7 @@ oc get projects
 # oc delete project hello-openshift
 ```
 
-## Install an existing helm chart from a helm repo
+### Install an existing helm chart from a helm repo
 
 
 Install an existing chart from repo
@@ -55,7 +58,7 @@ helm list
 helm uninstall example-mysql
 ```
 
-## Creating a custom helm chart from existing sample charts
+### Creating a custom helm chart from existing sample charts
 
 ```
 # Sample helm charts for Openshift
@@ -73,7 +76,7 @@ helm install nodejs-chart nodejs-ex-k
 
 ```
 
-## Building helm chart from scratch
+### Building helm chart from scratch
 
 ```
 
@@ -94,4 +97,101 @@ helm uninstall testchart1
 
 # test the template rendering but not install
 helm install --debug --dry-run testchart1 ./helm/testchart
+```
+
+# Working with Minikube
+
+See getting started guide in Minikube https://minikube.sigs.k8s.io/docs/start/
+See getting started guide in Kubernetes https://kubernetes.io/docs/setup/
+
+Tutorials https://kubernetes.io/docs/tutorials/
+
+## Helpful commands to know 
+```bash
+# starts minikube
+minikube start
+
+# checks the status of the kubernetes cluster
+kubectl cluster-info
+
+# shows kubernetes cluster on a brower
+minikube dashboard
+
+# shows available addons that can be installed
+minikube addons list
+
+# show all the workers in the cluster
+kubectl get nodes
+
+# list the current services in the cluster
+kubectl get services
+```
+
+## Deploy sample service
+
+```bash
+# deploy an image
+kubectl create deployment echo-service --image=mendhak/http-https-echo:19
+
+# expose the service to external traffic
+kubectl expose deployment echo-service --type=NodePort --port=8080
+
+# open in web browser
+minikube service echo-service
+
+# alternatively port forward the service to access in http://localhost:7080
+kubectl port-forward service/echo-service 7080:8080
+
+# list deployments
+kubectl get deployments
+
+# get all pods
+kubectl get pods
+
+# describe the pods
+kubectl describe pods
+
+# show the logs of the service
+kubectl logs $POD_NAME
+
+# execute commands (env) directly on the pod
+kubectl exec $POD_NAME -- env
+kubectl exec $POD_NAME -- bash
+```
+
+## Using labels
+```bash
+# use label to query list of pods based on labels
+kubectl get pods -l app=echo-service
+
+# add a label to a pod
+kubectl label pod $POD_NAME mylabel=awesome
+
+# delete a service using label
+kubectl delete service -l app=echo-service
+```
+
+## Scaling
+```bash
+kubectl get deployments
+
+# list the available replica sets
+kubectl get rs
+
+# scale up the deployment
+kubectl scale deployments/echo-service --replicas=2
+
+# scale down
+kubectl scale deployments/echo-service --replicas=1
+
+kubectl get pods -o wide
+```
+
+## Kubernetes manifests
+```bash
+# apply yaml manifest
+kubectl apply -f kubernetes.yaml
+
+# watch the pod deployments
+kubectl get --watch pods
 ```
