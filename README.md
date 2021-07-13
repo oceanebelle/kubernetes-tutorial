@@ -8,6 +8,8 @@ Pre-requisite option using CRC
 
 # Working with CodeReady Containers 
 
+OC cheatsheet: https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/developer-cli-commands.html
+
 ```
 # login to crc
 oc login -u developer -p developer https://api.crc.testing:6443
@@ -100,6 +102,8 @@ helm install --debug --dry-run testchart1 ./helm/testchart
 ```
 
 # Working with Minikube
+
+kubectl cheatsheet  https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 
 See getting started guide in Minikube https://minikube.sigs.k8s.io/docs/start/
 See getting started guide in Kubernetes https://kubernetes.io/docs/setup/
