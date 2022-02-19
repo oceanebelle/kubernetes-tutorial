@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "mycronservice.fullname" . }}-cronjob
+  labels:
+    {{- include "mycronservice.labels" . | nindent 4 }}
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 120  
+  jobTemplate: 
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "mycronservice.selectorLabels" . | nindent 8 }}           
+    spec:
+      template:        
+        startingDeadlineSeconds: 120 
+        spec:          
+          initContainers:
+          - name: service-exists-check
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            command: ['sh', '-c', "until nslookup {{ include "mycronservice.fullname" . }}-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for {{ include "mycronservice.fullname" . }}-service; sleep 1; done"]  
+          # - name: service-is-available-check
+          #   image: "curlimages/curl"
+          #   command: ['sh', '-c', "until curl http://{{ include "mycronservice.fullname" . }}-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for {{ include "mycronservice.fullname" . }}-service; sleep 1; done"]    
+          containers:
+          - name: {{ .Chart.Name }}            
+            image: "curlimages/curl"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["bin/sh", "-c"]
+            args: 
+              - echo {{ include "mycronservice.fullname" . }}-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/cronJob && 
+                curl http://{{ include "mycronservice.fullname" . }}-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local/cronJob
+          restartPolicy: Never
