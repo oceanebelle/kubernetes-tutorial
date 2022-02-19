@@ -11,6 +11,8 @@ Pre-requisite option using CRC
 OC cheatsheet: https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/developer-cli-commands.html
 
 ```
+crc start
+
 # login to crc
 oc login -u developer -p developer https://api.crc.testing:6443
 
@@ -39,7 +41,7 @@ oc get projects
 Install an existing chart from repo
 ```
 # Download latest version of helm executable
-curl -L https://mirror.openshift.com/pub/openshift-v4/clients/helm/latest/helm-darwin-amd64 -o /usr/local/bin/helm
+curl -L https://mirror.openshift.com/pub/openshift-v4/clients/helm/latest -o /usr/local/bin/helm
 
 # Add repository of helm chat to local helm client
 helm repo add stable https://charts.helm.sh/stable
