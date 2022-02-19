@@ -93,6 +93,9 @@ cd ../
 
 helm install testchart1 ./helm/testchart
 
+helm lint ./helm/testchart
+helm template ./helm/testchart
+
 # retrieve actual manifest generated
 helm get manifest testchart1
 
